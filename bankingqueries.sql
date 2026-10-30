@@ -125,19 +125,45 @@ add AccountID int;
 alter table Transactions
 add constraint FK_Transactions_Accounts
 foreign key (AccountID)
-references accounts(AccountsID); 
+references accounts(AccountID); 
 
 desc transactions; 
 
 alter table loans
-add customersID int;
+add customerID int;
 
 alter table loans
-add constraint FK_Loans_Customers
-foreign key (CustomersID)
-references customers(CustomersID);
+add constraint FK_Loans_CustomersT
+foreign key (CustomerID)
+references customers(CustomerID);
 
 desc loans;
 
+create table KYC(
+KycID INT primary key,
+AadharNo varchar(12) not null,
+PanNo varchar(10) not null,
+CustomerID int not null,
+constraint fk_customers
+foreign key (customerid)references customers(customerid)
+);
+
+show CREATE TABLE kyc; --
+
+SELECT
+    CONSTRAINT_NAME,
+    CONSTRAINT_TYPE
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+WHERE TABLE_SCHEMA = 'bankingdb'
+  AND TABLE_NAME = 'kyc';
+
+desc KYC;
+
+ALTER TABLE loans DROP COLUMN customersID;
+
+ALTER TABLE loans
+DROP FOREIGN KEY FK_Loans_Customers;
+
+Drop Table kyc;
 
 
