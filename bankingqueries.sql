@@ -13,9 +13,9 @@ phone varchar(10)
 
 desc customers;
 ALTER TABLE customers 
-ADD CONSTRAINT pk_customers_id primary key (customerID);
+ADD CONSTRAINT pk_customer_id primary key (customerID);
 
-select * from customers;
+select *  from customers;
 
 ALTER table customers
 ADD AccountCreationDate Date;
@@ -72,7 +72,7 @@ desc loans;
 alter table customers
 Add	DateOfBirth Date;
 
-desc customers
+desc customers;
 
 ALTER table customers
 modify phone varchar(20);
@@ -166,4 +166,14 @@ DROP FOREIGN KEY FK_Loans_Customers;
 
 Drop Table kyc;
 
+ALTER TABLE transactions 
+ADD CONSTRAINT pk_transaction_id primary key (transactionid);
 
+INSERT INTO Customers
+VALUES
+(101,'Amit','Sharma','amit@gmail.com',9876543210,'2024-01-15','1998-05-10');
+
+
+INSERT INTO Customers
+(customerid,firstname,lastname,email,phone,accountcreationdate,dateofbirth)
+VALUES (102,'Priya','Patil','priya@gmail.com','9876543211','2024-02-01','1999-08-22');
