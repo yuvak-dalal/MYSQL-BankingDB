@@ -508,98 +508,154 @@ else "Low value loan"
 end as loancategory
 from loans;
 
--- 13/11/2026
-
--- Categorize the deposits in the transactions in the 
--- 
--- 
--- 
--- 
--- 
-
-select transactions amount; 
-cas e
-when transactiontype = "deposit" and amount >= 10000 THEN "High amount"
-
-
--- String Functions
-
--- UPPER() FUNCTION
-
-select upper ("hello");
-
-select upper(firstname) AS Firstname , phone , email from customers;
-
--- LOWER() FUNCTION
-
+-- DATE FUNCTIONS
 select * from customers;
-select lower (firstname) AS Firstname , lower(lastname) Lastname from customers;
 
--- LENGTH() FUNCTION
-select length("NAGPUR") AS "NoOfCharacters"; -- GIVES O/P IN NUMBER OF BYTES
-select length("नागपुर") ; -- GIVES O/P IN NUMBER OF BYTES
-select char_length("NAGPUR"); -- GIVES O/P IN NUMBER OF CHARACTERS
-select char_length("नागपुर"); -- GIVES O/P IN NUMBER OF CHARACTERS
+-- NOW FUNCTION
 
--- CONCAT FUNCTIONS
+select now();
 
-select  concat("Hello"," ","World") as ConcatenatedString;
-select concat(firstname, " ", lastname) as fullname, phone,email from customers;
+select current_date();
+select curdate();
 
--- SUBSTRING() OR SUBSTR() FUNCTION 
+select current_time();
+select curtime();
 
-select substr("Hello World India",7,5) as extractedstring;
+select CustomerID,FirstName,dateofbirth,
+year(dateofbirth),month(dateofbirth),day(dateofbirth)
+from customers where customerID = 104;
 
-select customerid, concat(substr(firstname1,1),"-"lastname) as fullname, 
-phone , email from customers ;
-
--- TRIM() FUNCTION
-select length("    Hello World    ");
-select length(trim("    Hello World   "));
-select length(trim(substring("Hello World",6)));
-
--- REPLACE() FUNCTION
-
-select replace();
-
--- MATHEMATICAL FUNCTIONS
-
--- ROUND FUNCTION
-select * from accounts;
-
-select avg(Balance) from accounts
-where accounttype = "Savings";
-
-select round(avg(Balance),2) as AvgBalance from accounts
-where accounttype = "Savings";
-
-
--- EX OF ROUND()
-select round(3.6);
-select round(3.3);
-select round(3.5);
-
--- CEIL() OR CEILING() FUNCTION
-select ceiling(avg(Balance)) from accounts
-where accounttype = "Savings";
-
--- FLOOR FUNCTION
-select floor(avg(Balance)) from accounts
-where accounttype = "Savings";
-
--- ABSOLUTE() FUNCTION -- IT REMOVES THE signal
-select abs(-3656);
-select abs(-1.365);
-select abs(6.464);
-
--- MOD() FUNCTION -- IT RETURNS THE REMAINDER VALUE
-select (7/3);
-select mod(7,3);
-
--- POWER()
-select power(2,3);
-select power(1.5,3);
-
--- SQRT()
-select sqrt(123);
-select sqrt(144); 
+select CustomerID,FirstName,dateofbirth,
+ year(curdate()) - year(dateofbirth) as age
+ from customers where customerID = 104;
+ 
+ -- DATEDIFF 
+select firstname,dateofbirth,
+ round(datediff(curdate(), dateofbirth) / 365,1) as age
+ from customers;
+ 
+ select firstname,dateofbirth,
+ concat(firstname,"Age is ",round(datediff(curdate(), dateofbirth) / 365,1)) as age
+ from customers;
+ 
+ -- DATE_ADD
+ select concat(firstname," ",lastname) as fullname,
+ accountcreationdate,
+ date_add( accountcreationdate, interval 1 year) as KYCRENEWAL
+  from customers;
+  
+  -- DATE_SUBTRACT
+  
+  select date_sub(curdate(), INTERVAL 7 DAY);
+  
+  -- AGGREGATE FUNCTIONS
+  
+  -- CALCULATE THE TOTAL BALANCE MAINTAINED ACROSS ALL CUSTOMER ACCOUNTS
+  
+  select sum(balance) totalbalance from accounts;
+  
+  -- CALCULATE THE AVERAGE BALANCE MAINTAINED ACROSS ALL CUSTOMER ACCOUNTS
+  
+  select avg(balance) averagebalance from accounts;
+  
+  -- CALCULATE THE HIGHEST BALANCE MAINTAINED ACROSS ALL CUSTOMER ACCOUNTS
+  
+  select  max(balance) Highest_Balance from accounts;
+  
+  -- DETERMINE THE TOTAL NUMBER OF CUSTOMER ACCOUNTs
+  -- AVAILABLE IN THE SYSTEM
+  
+  select  count(*) as NoOfAccounts from accounts;
+  
+     -- GROUP BY
+     
+   select accounttype,
+   count(*) from accounts 
+   group by accounttype;
+   
+    select accounttype, sum(balance) as NoOfAccounts
+   from accounts 
+   group by accounttype;
+   
+   -- FIND TOTAL AMOUNT BY TRANSACTION TYPE
+   
+   select * from transactions;
+   
+ select transactiontype, sum(amount) as NoOfTransaction
+   from transactions 
+   group by transactiontype;
+   
+   --
+   --
+   --
+   --
+   
+   -- FIND TOTAL ACCOUNTS FOR BRANCH AND ACCOUNT TYPE
+   select * from accounts;
+   
+   select branchid, accounttype, count(*) as NoOfAccounts
+   from accounts
+   group by branchid, accounttype
+   order by NoOfAccounts desc;
+   
+    -- HAVING CLAUSE
+    
+    -- FIND TRANSACTION TYPE WHERE TOTAL AMOUNT FOR THAT TRANSACTION TYPE EXCEEDS 20000
+    
+    select transactiontype, sum(amount) as TotalAmount
+   from transactions 
+   group by transactiontype
+   having sum(amount) > 10000;
+   
+     select transactiontype, sum(amount) as TotalAmount
+   from transactions 
+   group by transactiontype
+   having sum(amount) > 10000 and transactiontype = "deposit" ;
+   
+   select * from transactions;
+   
+   select transactiontype, sum(amount) as TotalAmount;
+   
+   select * from customers;
+   
+   -- FIND THE NUMBER OF CUSTOMERS JOINED ACCORDING TO THE YEAR FROM CUSTOMERS TABLE
+   
+    select year(accountcreationdate) as Years  , count(*) as TotalCustomers
+   from customers 
+   group by Years;
+   
+     select year(accountcreationdate) as Years  , count(*) as TotalCustomers
+   from customers 
+   group by Years
+   order by totalcustomers desc;
+   
+   
+   -- FIND TOTAL LOAN AMOUNT AMOUNT FOR ALL THE CUSTOMERS 
+    select * from loans;
+    
+    select customerID, sum(LoanAmount) as TotalLoanAmount
+   from loans 
+   group by customerID
+   order by Customerid ;
+   
+   -- DISPLAY DISTINCT BRANCHIDs FROM ACCCOUNTS WHERE BALANCE > 30000.
+   
+   select * from accounts;
+   
+    select branchId, balance from accounts
+ where balance > 30000;
+ 
+ -- DISPLAY ALL SAVINGS ACCOUNTS BELONGING TO BRANCH 1 OR 3.
+ 
+select * from accounts
+ where  accounttype = "savings"and  (BranchID = "1" or branchid = "3"); 
+ 
+ -- GROUP BY WITH WHERE AND HAVING 
+ 
+ -- FIND THE AVERAGE BALANCE OF CURRENT ACCOUNT FOR EACH BRANCH. DISPLAY  ONLY BRANCHES WHERE THE AVERAGE BALNCE EXCEEDS RS 40000. 
+ 
+ select * from accounts;
+   select branchId, accounttype, avg(balance) as AvgBalance from accounts
+ where accounttype = "CURRENT"
+ group by branchid;
+ 
