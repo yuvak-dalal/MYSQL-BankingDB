@@ -659,3 +659,37 @@ select * from accounts
  where accounttype = "CURRENT"
  group by branchid;
  
+ select * from customers;
+ select * from accounts;
+ 
+ -- 18/11/2026
+ 
+ -- JOINS 
+ -- A JOIN COMBINES RELATED ROWS FROM DIFFERENT TABLES BASED ON A COMMON COLUMN
+ 
+ -- 1. INNER JOIN
+-- MATCHES ROWS THAT EXIST IN BOTH TABLES
+
+ -- FIND ALL CUSTOMERS WHO HAVE ACCOUNTS AND SHOW THEIR BALANCE.
+ 
+ select c.CustomerID,c.firstname,c.lastname,a.AccountType,a.balance 
+ from customers c 
+ inner join accounts a 
+ on c.CustomerID  = a.CustomerID;
+ 
+  select *
+ from customers c 
+ inner join accounts a 
+ on c.CustomerID  = a.CustomerID;
+ 
+ -- FIND ALL CUSTOMERS WHO HAVE LOANS
+ -- OUTPUT SHOULD CONTAIN CUSTOMERID,FIRSTNAME,LASTNAME,PHONE,LOANAMOUNT
+ 
+ select * from loans;
+ 
+ select c.CustomerID,c.firstname,c.lastname,c.phone,l.loanamount
+ from customers c 
+ inner join loans l # BY DEFAULT SQL USES INNER JOIN IF JOIN NAME OR JOIN TYPE IS NOT MENTIONED IN THE QUERY
+ on c.CustomerID  = l.CustomerID;
+ 
+ -- 19/11/2026
