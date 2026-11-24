@@ -693,3 +693,131 @@ select * from accounts
  on c.CustomerID  = l.CustomerID;
  
  -- 19/11/2026
+ 
+ -- 20/11/2026
+ 
+ -- 23/11/2026
+ 
+ -- SCALAR SUBQUERY
+ -- A SCALAR SUBQUERY RETURNS EXACTLY ONE ROW AND COLUMN.
+ 
+ select customerid, accountid, accounttype, balance
+ from accounts
+ where balance > (select avg(balance) from accounts where accounttype = "Savings")
+ && Accounttype ="Savings";
+ 
+
+ 
+ select c.customerid,c.firstname, a.accountid,a.accounttype,a.balance
+ from accounts a
+ left join customera c
+ on a.CustomerID = c.CustomerID
+ where balance > (select avg(balance) from accounts where accounttype = "Savings")
+ && Accounttype ="Savings";
+ 
+  -- 24/11/2026
+  
+  -- FIND THE ACCOUNT(S) HAVING THE HIGHEST BALANCE
+  
+ SELECT 
+    customerid, accounttype, balance
+FROM
+    accounts
+WHERE
+    balance = (SELECT 
+            MAX(Balance)
+        FROM
+            accounts);
+ 
+-- FIND CUSTOMERS WHOSE YEAR OF BIRTH IS EARLIER THAN THE AVERAGE YEAR OF BIRTH
+-- OF ALL CUSTOMERS
+
+SELECT 
+    customerid, firstname, lastname, dateofbirth
+FROM
+    customers
+WHERE
+    YEAR(DateOfBirth) < (SELECT 
+            AVG(YEAR(DateOfBirth))
+        FROM
+            customers);
+  
+ --  MULTIPLE ROW SUBQUERY
+ 
+ -- MULTIPLE ROW SUBQUERY RETURN MULTIPLE ROWS AND USUALLY A SINGLE COLUMN.
+ 
+ -- FIND ALL CUSTOMERS WHO HAVE TAKEN ATLEAST ONE LOAN
+ 
+ select * from loans;
+ 
+ select c.customerid,c.firstname,l.loanamount
+ from customers c
+ join loans l
+ on c.customerid = l.customerID;    -- USING JOIN 
+ 
+ select customerid,firstname from customers
+ where customerid in 
+(select customerid from loans);
+
+-- FIND ALL CUSTOMERS WHO HAVE ATLEAST ONE SAVINGS ACCOUNT.
+
+select * from accounts; 
+
+select customerid,firstname from customers where customerid in
+(select customerid from accounts where accounttype = "Savings");
+
+select * from accounts; 
+
+-- UPDATE CUSTOMERID TO 114
+
+update accounts set customerid = 114
+where accountid = 1014;
+
+-- UPDATE ACCOUNT TYPE OF ACCOUNT ID 1009 TO CURRENT.
+
+update accounts set accounttype = "Current"
+where accountid = 1009;
+
+-- UPDATE BALANCE TO 0 FOR ACCOUNT ID 1008.
+
+update accounts set Balance = 0
+where accountid = 1008;
+
+-- UPDATE BRANCH ID TO 5 FOR ACCOUNTID 1012.
+
+UPDATE ACCOUNTS SET BRANCHID = 5
+WHERE ACCOUNTID = 1012;
+
+select * from accounts;
+select * from branches;
+select * from customers;
+
+-- ADD ACCOUNT CREATION DATE FOR CUSTOMER ID 109.
+
+update customers set accountcreationdate = "2026-01-12"
+where customerid = 109;
+
+select * from loans;
+
+update loans set loanamount = 200000
+where loanid = 507;
+
+update loans set customerid = 104
+where loanid = 509;
+
+select * from transactions;
+
+update transactions set amount = 6500
+where transactionid = 7;
+
+update transactions set transactiontype = "Withdrawal"
+where transactionid = 10;
+
+update transactions set accountid = 1006
+where transactionid = 13;
+
+-- FIND ALL CUSTOMERS WHO HAVE AN ACCOUNT IN BRANCHID = 1.
+
+select customerid,firstname,lastname from customers
+where customerID in
+(select customerid fro, accounts where Branchid = 1)
