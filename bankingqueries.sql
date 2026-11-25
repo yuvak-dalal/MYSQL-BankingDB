@@ -820,4 +820,66 @@ where transactionid = 13;
 
 select customerid,firstname,lastname from customers
 where customerID in
-(select customerid fro, accounts where Branchid = 1)
+(select customerid from accounts where Branchid = 1);
+
+-- 25/11/2026.
+
+-- FIND ALL ACCOUNTS WHOSE BALANCE IS GREATER THAN ANY ACCOUNT IN BRANCH = 1.
+
+select accountid,accounttype,balance,customerid
+from accounts
+where balance > ANY (
+select balance from accounts where branchid = 1
+);
+
+select accountid,accounttype,balance,customerid
+from accounts
+where balance > ALL (
+select balance from accounts where branchid = 1
+);
+
+-- FIND THE BRANCH WITH THE HIGHEST AVERAGE ACCOUNT BALANCE
+
+select branchid,avg(balance) from
+accounts
+group by Branchid
+order by avgbalance desc
+limit 1;
+
+select * from branches;
+
+
+select branchid,avg(balance) as avgbal from accounts
+group by branchid
+having avgbal > (
+select max(avgbalance) from
+(select avg(balance) as avgbalance from accounts 
+group by branchid) as t);
+
+select branchid,avg(balance) as avgbal from accounts
+group by branchid
+having avgbal >= (
+select max(avgbalance) from
+(select avg(balance) as avgbalance from accounts 
+group by branchid) as t);
+
+
+-- CORRELATED SUBQUERY.
+-- A CORRELTED SUBQUERY REFERENCES ONE OR MORE COLUMNS FROM THE OUTER QUERY.
+-- IT CANNOT EXECUTE INDEPENDENTLY AND RUNS ONCE FOR EACH ROW OF THE OUTER QUERY.
+
+-- QUE :-  FIND ACCOUNTS WHOSE BALANCE IS GREATER THAN THE AVERAGE BALANCE OF THEIR RESPECTIVE BRANCH
+
+select a.accountid,a.branchid
+from accounts a
+where a.balance > (
+select avg(balance)
+from accounts
+where branchid = a.branchid
+);
+
+-- FIND EMPLOYEES WHOSE SALARY IS GREATER THAN THE AVERAGE SALARY OF THE RESPECTIVE DEPARTMENTS.
+
+select * from employees;
+
+-- find customers who have  more than one account.
