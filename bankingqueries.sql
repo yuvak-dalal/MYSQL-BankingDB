@@ -878,8 +878,120 @@ from accounts
 where branchid = a.branchid
 );
 
+-- 27/11/2026. 
+
 -- FIND EMPLOYEES WHOSE SALARY IS GREATER THAN THE AVERAGE SALARY OF THE RESPECTIVE DEPARTMENTS.
+
+select e.employeename,e.department,e.salary from employees e
+where e.salary > (
+select avg(e1.salary) from employees e1
+where e1.Department = e.Department
+);
 
 select * from employees;
 
 -- find customers who have  more than one account.
+
+select c.customerID,c.firstname,c.lastname
+from customers c where (
+select count(*) from accounts a
+where c.CustomerID = a.CustomerID
+) > 1;
+
+select c.customerID,c.firstname,c.lastname
+from customers c where (
+select count(*) from accounts a
+where c.CustomerID = a.CustomerID
+);
+
+-- TABLE SUBQUERY (DERIVED TABLE/ INLINE VIEW).
+
+-- A TABLE SUBQUERY RETURNS MULTIPLE ROWS AND MULTIPLE COLUMNS.
+-- IT IS USED INSIDE THE FROM CLAUSE AND BEHAVES LIKE A TEMPORARY TABLE .
+
+-- RULE :- THE SUBQUERY MUST HAVE AN ALIAS.
+
+-- FIND THE AVERAGE ACCOUNT BALANCE FOR EACH ACCOUNT TYPE USING A DERIVED TABLE.
+-- (THIS CAN BE DONE USING GROUP BY ALSO)
+-- USING A DERIVED TABLE.
+
+select accountTypeBalance.accounttype, accountTypeBalance.avgBalance
+from
+(select accounttype, avg(balance)
+from accounts
+group by accounttype) AS accountTypeBalance;
+
+-- DISPLAY ON;Y THOSE ACCOUNT TYPES WHOSE AVERAGE BA;ANCE IS GREATER THAN 3000.
+
+select accountTypeBalance.accounttype, accountTypeBalance.avgBalance
+from
+(select accounttype, avg(balance)
+from accounts
+group by accounttype) AS accountTypeBalance
+where accountTypebalance.avgBalance > 30000;
+
+select * from accounts;
+
+-- FIND THE TOP 3 CUSTOMERS BASED ON THEIR TOTAL ACCOUNT BALANCE.
+
+SELECT 
+    customerTotalBalance.customerID,
+    customerTotalBalance.firstname,
+    customerTotalBalance.TotalBalance
+FROM
+    (SELECT 
+        c.customerID, c.firstname, SUM(a.balance) AS TotalBalance
+    FROM
+        customers c
+    JOIN accounts a ON c.customerID = a.customerID
+    GROUP BY c.CustomerID) AS customerTotalBalance
+ORDER BY customerTotalBalance.TotalBalance DESC
+LIMIT 3;
+
+-- SUBQUERY IN SELECT CLAUSE.
+
+-- SUBQUERY IN THE SELECT CLAUSE IS TYPICALLY A SCALAR SUBQUERY USED TO CREATE A DERIVED COLUMN.
+
+-- select c.customerid, c.firstname, (
+-- select count(*) from
+ -- accounts where ;
+
+-- SUBQUERIES INSIDE UPDATE CLAUSE.
+
+-- INCREASE THE BALANCE OF ACCOUNTS BELONGING TO CUSTOMERS WHO HAVE TAKEN A LOAN BY 5%
+
+select * from accounts;
+select * from loans;
+
+update accounts set balance = balance + (0.05 * balance)
+where customerid in (select customerid from loans);
+
+-- SUBQUERY INSIDE DELETE CLAUSE.
+
+-- DELETE ALL TRANSACTIONS BELOW AMOUNT OF 1000 WHERE TRANSACTION TYPE IS WITHDRAWAL.
+
+select * from transactions;
+
+Delete from transactions
+where transactionid in (select TransactionID from transactions
+where TransactionType = "Withdrawal" ) and amount < 1000;
+
+Delete from transactions
+where transactionid in (select TransactionID from transactions
+where TransactionType = "Withdrawal" ) and amount < 1000;
+
+-- CREATE A HIGH-VALUE-ACCOUNTS TABLE AND INSERT ALL ACCOUNTS WHOSE BALANCE IS GREATER THAN AVERADE ACCOUNT BALANCE.
+
+CREATE TABLE HighValueAccounts (
+AccountID INT,
+CustomerID INT,
+BranchID INT,
+AccountType VARCHAR(20),
+Balance DECIMAL(10,2),
+FOREIGN KEY (CustomerID) REFERENCES customers(CustomerID),
+FOREIGN KEY (BranchID) REFERENCES branches(BranchID)
+);
+
+insert into ;
+
+-- CREATE HIGH VALUE CUSTOMERS TABLE AND INSERT CUSTOMERS WHOSE TOTAL ACCOUNT BALANCE IS GREATER THAN 50000
